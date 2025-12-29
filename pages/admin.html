@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(120deg,#f4f7fb,#e6edf5); min-height:100vh; }
+        th { cursor:pointer; user-select:none; }
+        .card { border-radius:16px; }
+        .table td { vertical-align:middle; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand"><i class="bi bi-shield-lock"></i> Admin Panel</span>
+    <button class="btn btn-outline-light btn-sm" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Выйти</button>
+</nav>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Пользователи</h4>
+        <button class="btn btn-success" onclick="createModal.show()"><i class="bi bi-person-plus"></i> Создать пользователя</button>
+    </div>
+
+    <div class="d-flex align-items-center filter-bar mb-3">
+        <input type="number" class="form-control w-25 me-2" id="filterYear" placeholder="Год подключения">
+        <button class="btn btn-info me-2" onclick="filterByYear()">Фильтровать</button>
+        <button class="btn btn-secondary me-3" onclick="resetFilter()">Сбросить фильтр</button>
+        <span>Количество: <span id="yearCount">0</span></span>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0" id="adminTable" data-sort="asc">
+                <thead class="table-light">
+                    <tr>
+                        <th onclick="sortTable(0)">ID</th>
+                        <th onclick="sortTable(1)">Login</th>
+                        <th onclick="sortTable(2)">Name</th>
+                        <th onclick="sortTable(3)">Surname</th>
+                        <th onclick="sortTable(4)">Patronymic</th>
+                        <th onclick="sortTable(5)">Phone</th>
+                        <th onclick="sortTable(6)">Year</th>
+                        <th onclick="sortTable(7)">Tariff</th>
+                        <th onclick="sortTable(8)">Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ================= EDIT USER ================= -->
+<div class="modal fade" id="editModal">
+<div class="modal-dialog modal-lg">
+<div class="modal-content p-3">
+<h5>Редактирование пользователя</h5>
+<input type="hidden" id="userId">
+<input type="hidden" id="subId">
+<div class="row">
+    <div class="col">
+        <label>Name</label><input class="form-control mb-2" id="name">
+        <label>Surname</label><input class="form-control mb-2" id="surname">
+        <label>Patronymic</label><input class="form-control mb-2" id="patronymic">
+        <label>Phone</label><input class="form-control mb-2" id="phone">
+    </div>
+    <div class="col">
+        <label>Year connected</label><input type="number" class="form-control mb-2" id="year">
+        <label>Tariff</label>
+        <select class="form-control mb-2" id="tariff">
+            <option value="economy">Economy</option>
+            <option value="standard">Standard</option>
+            <option value="premium">Premium</option>
+        </select>
+        <label>Role</label>
+        <select class="form-control mb-2" id="role">
+            <option value="subscriber">Subscriber</option>
+            <option value="admin">Admin</option>
+        </select>
+    </div>
+</div>
+
+<hr>
+<div class="alert alert-warning">Сброс пароля: пользователь получит новый пароль</div>
+<input type="password" class="form-control mb-2" id="resetPassword" placeholder="Новый пароль (если нужен сброс)">
+<div class="text-end mt-3">
+    <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+    <button class="btn btn-primary" onclick="saveChanges()">Сохранить</button>
+</div>
+</div></div></div>
+
+<!-- ================= CREATE USER ================= -->
+<div class="modal fade" id="createModal">
+<div class="modal-dialog modal-lg">
+<div class="modal-content p-3">
+<h5>Создание пользователя</h5>
+<div class="row">
+<div class="col">
+    <input class="form-control mb-2" id="c_login" placeholder="Login">
+    <input type="password" class="form-control mb-2" id="c_password" placeholder="Password">
+    <input class="form-control mb-2" id="c_name" placeholder="Name">
+    <input class="form-control mb-2" id="c_surname" placeholder="Surname">
+    <input class="form-control mb-2" id="c_patronymic" placeholder="Patronymic">
+</div>
+<div class="col">
+    <input class="form-control mb-2" id="c_phone" placeholder="Phone">
+    <input class="form-control mb-2" id="c_year" placeholder="Year connected (optional)">
+    <select class="form-control mb-2" id="c_tariff">
+        <option value="economy">Economy</option>
+        <option value="standard">Standard</option>
+        <option value="premium">Premium</option>
+    </select>
+    <select class="form-control mb-2" id="c_role">
+        <option value="subscriber">Subscriber</option>
+        <option value="admin">Admin</option>
+    </select>
+</div>
+</div>
+<div class="text-end">
+    <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+    <button class="btn btn-success" onclick="createUser()">Создать</button>
+</div>
+</div></div></div>
+
+<!-- ================= DELETE CONFIRM ================= -->
+<div class="modal fade" id="deleteModal">
+<div class="modal-dialog">
+<div class="modal-content p-3">
+<h5>Подтверждение удаления</h5>
+<p>Вы уверены, что хотите удалить пользователя?</p>
+<div class="text-end">
+    <button class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+    <button class="btn btn-danger" onclick="deleteUser()">Да</button>
+</div>
+</div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>

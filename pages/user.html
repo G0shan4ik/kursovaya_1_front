@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(120deg, #f4f7fb, #e6edf5);
+            min-height: 100vh;
+        }
+        .card {
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand">
+        <i class="bi bi-person-circle"></i> Личный кабинет
+    </span>
+    <button class="btn btn-outline-light btn-sm" onclick="logout()">
+        <i class="bi bi-box-arrow-right"></i> Выйти
+    </button>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- USER INFO -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5>Аккаунт</h5>
+            <p><b>Login:</b> <span id="u_login"></span></p>
+            <p><b>Role:</b> <span id="u_role"></span></p>
+            <p><b>Создан:</b> <span id="u_created"></span></p>
+        </div>
+    </div>
+
+    <!-- SUB INFO -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5>Мои данные</h5>
+
+            <table class="table table-bordered">
+                <tbody>
+                <tr><th>Name</th><td id="s_name"></td></tr>
+                <tr><th>Surname</th><td id="s_surname"></td></tr>
+                <tr><th>Patronymic</th><td id="s_patronymic"></td></tr>
+                <tr><th>Phone</th><td id="s_phone"></td></tr>
+                <tr><th>Year connected</th><td id="s_year"></td></tr>
+                <tr><th>Tariff</th><td id="s_tariff"></td></tr>
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary" onclick="openEdit()">
+                <i class="bi bi-pencil"></i> Редактировать
+            </button>
+
+            <button class="btn btn-warning ms-2" onclick="openPasswordModal()">
+                <i class="bi bi-key"></i> Сменить пароль
+            </button>
+
+            <button class="btn btn-danger ms-2" onclick="deleteAccount()">
+                <i class="bi bi-trash"></i> Удалить аккаунт
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal fade" id="editModal">
+<div class="modal-dialog modal-lg">
+<div class="modal-content p-4">
+<h5 class="mb-3">Редактирование данных</h5>
+
+<input type="hidden" id="subId">
+
+<div class="row">
+<div class="col-md-6">
+
+    <label class="form-label">Login</label>
+    <input class="form-control mb-2" id="editLogin">
+
+    <label class="form-label">Name</label>
+    <input class="form-control mb-2" id="editName">
+
+    <label class="form-label">Surname</label>
+    <input class="form-control mb-2" id="editSurname">
+
+    <label class="form-label">Patronymic</label>
+    <input class="form-control mb-2" id="editPatronymic">
+
+</div>
+<div class="col-md-6">
+
+    <label class="form-label">Phone</label>
+    <input class="form-control mb-2" id="editPhone">
+
+    <label class="form-label">Year connected</label>
+    <input type="number" class="form-control mb-2" id="editYear">
+
+    <label class="form-label">Tariff</label>
+    <select class="form-control mb-2" id="editTariff">
+        <option value="economy">Economy</option>
+        <option value="standard">Standard</option>
+        <option value="premium">Premium</option>
+    </select>
+
+</div>
+</div>
+
+<div class="text-end mt-3">
+    <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+    <button class="btn btn-success" onclick="saveAll()">Сохранить</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal fade" id="passwordModal">
+<div class="modal-dialog">
+<div class="modal-content p-4">
+<h5>Смена пароля</h5>
+
+<label class="form-label">Старый пароль</label>
+<input type="password" class="form-control mb-2" id="oldPassword">
+
+<label class="form-label">Новый пароль</label>
+<input type="password" class="form-control mb-2" id="newPassword">
+
+<div class="text-end">
+    <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+    <button class="btn btn-danger" onclick="changePassword()">Сменить</button>
+</div>
+
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/user.js"></script>
+</body>
+</html>
